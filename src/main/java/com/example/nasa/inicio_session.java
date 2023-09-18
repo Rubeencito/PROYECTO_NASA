@@ -134,6 +134,9 @@ public class inicio_session {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 new inicio_session();
+                pag_mecanico ventana = new pag_mecanico();
+                ventana.setVisible(true);
+
             }
         });
     }
