@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 
+//inicio de session
 public class inicio_session {
 
     private JFrame frame;
