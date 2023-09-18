@@ -8,6 +8,10 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class inicio_session {
 
@@ -113,8 +117,13 @@ public class inicio_session {
 
                 // Aquí puedes agregar lógica para verificar el inicio de sesión
                 // Por ejemplo, verificar si el usuario y la contraseña son correctos
-
-                JOptionPane.showMessageDialog(frame, "Rol: " + rolSeleccionado + "\nUsuario: " + usuario);
+                if (verificarCredenciales(usuario, contrasena, rolSeleccionado)) {
+                    // Credenciales válidas, redirigir al usuario a la página correspondiente
+                    redirigirSegunRol(rolSeleccionado, usuario);
+                } else {
+                    // Credenciales inválidas, mostrar un mensaje de error
+                    JOptionPane.showMessageDialog(frame, "Credenciales inválidas. Inténtalo de nuevo.");
+                }
             }
         });
 
@@ -130,6 +139,53 @@ public class inicio_session {
         frame.setVisible(true);
     }
 
+    // Método para verificar las credenciales en la base de datos
+    private boolean verificarCredenciales(String nombreUsuario, String contrasena, String professionID) {
+        Connection conexion = null;
+        PreparedStatement statement = null;
+        ResultSet resultSet = null;
+
+        try {
+            conexion = ConexionDB.obtenerConexion();
+            String consulta = "SELECT * FROM usuario WHERE nombreUsuario = ? AND contraseña = ? AND profession_ID = ?";
+            statement = conexion.prepareStatement(consulta);
+            statement.setString(1, nombreUsuario);
+            statement.setString(2, contrasena);
+            statement.setString(3, professionID);
+            resultSet = statement.executeQuery();
+
+            return resultSet.next(); // Si hay resultados, las credenciales son válidas
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            ConexionDB.cerrarConexion(conexion);
+        }
+    }
+
+    // Método para redirigir según el rol
+    private void redirigirSegunRol(String professionID, String usuario) {
+        if (professionID.equals("1")) {
+            // Redirigir a la página de Mecánico y pasar el nombre de usuario
+            pag_mecanico paginaMecanico = new pag_mecanico(usuario);
+            // Lógica adicional para mostrar la página de Mecánico
+        } else if (professionID.equals("2")) {
+            // Redirigir a la página de Espía y pasar el nombre de usuario
+            pag_espia paginaEspia = new pag_espia(usuario);
+            // Lógica adicional para mostrar la página de Espía
+        } else if (professionID.equals("3")) {
+            // Redirigir a la página de Físico y pasar el nombre de usuario
+            pag_fisico paginaFisico = new pag_fisico(usuario);
+            // Lógica adicional para mostrar la página de Físico
+        } else if (professionID.equals("4")) {
+            // Redirigir a la página de Astronauta y pasar el nombre de usuario
+            pag_astronauta paginaAstronauta = new pag_astronauta(usuario);
+            // Lógica adicional para mostrar la página de Astronauta
+        }
+        // Agrega más casos según los roles que tengas
+    }
+
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -141,6 +197,7 @@ public class inicio_session {
         });
     }
 }
+
 
 
 
