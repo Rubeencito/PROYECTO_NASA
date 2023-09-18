@@ -1,6 +1,12 @@
 package com.example.nasa;
 
-import javax.swing.*;
+public class pag_mecanico {
+    private String usuario;
 
-public class pag_mecanico extends JPanel {
+    public pag_mecanico(String usuario) {
+        this.usuario = usuario;
+    }
+
+    // Resto de la lógica de la clase pag_mecanico
 }
+
