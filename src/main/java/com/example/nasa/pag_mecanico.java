@@ -5,7 +5,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-
 public class pag_mecanico extends JFrame {
     public pag_mecanico(String usuario) {
         // Configurar la ventana
@@ -75,6 +74,18 @@ public class pag_mecanico extends JFrame {
         botonCerrar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.exit(0); // Cerrar la aplicación
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                // new inicio_session();
+                String usuario = null;
+                pag_mecanico ventana = new pag_mecanico(usuario);
+                ventana.setVisible(true);
+
             }
         });
     }

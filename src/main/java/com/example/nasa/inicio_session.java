@@ -1,14 +1,14 @@
 package com.example.nasa;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
 import java.io.File;
-import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,7 +22,18 @@ public class inicio_session {
     private JPasswordField contrasenaField;
     private JButton iniciarSesionButton;
 
+    private Connection conexion;
+
     public inicio_session() {
+        try {
+            // Establecer la conexión a la base de datos MySQL
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost/NASA", "root", "Admin123");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Error al conectar a la base de datos.");
+            System.exit(1);
+        }
+
         // Crear un frame sin decoración
         frame = new JFrame();
         frame.setUndecorated(true); // Sin bordes de ventana
@@ -35,6 +46,9 @@ public class inicio_session {
         frame.setSize(screenSize.width, screenSize.height);
         frame.setLocation(0, 0);
 
+        // Establecer el estado de la ventana en maximizado
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         // Crear un panel para el fondo de la imagen con el mismo tamaño que la pantalla
         JPanel backgroundPanel = new JPanel() {
             private BufferedImage image;
@@ -44,7 +58,7 @@ public class inicio_session {
                     // Carga la imagen de fondo desde el archivo "fondo.jpg"
                     File imageFile = new File("src/main/java/com/example/nasa/fondo.jpg");
                     image = ImageIO.read(imageFile);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
@@ -95,7 +109,7 @@ public class inicio_session {
         rolesComboBox = new JComboBox<>(roles);
         gbc.gridx = 0;
         gbc.gridy = 3;
-        gbc.gridwidth = 2; // Ocupa dos columnas
+        gbc.gridwidth = 2; // Ocupa dos columna
         gbc.anchor = GridBagConstraints.CENTER; // Centra el desplegable en el recuadro
         panel.add(rolesComboBox, gbc);
 
@@ -110,13 +124,12 @@ public class inicio_session {
         iniciarSesionButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String rolSeleccionado = (String) rolesComboBox.getSelectedItem();
                 String usuario = usuarioField.getText();
                 char[] contrasenaChars = contrasenaField.getPassword();
                 String contrasena = new String(contrasenaChars);
+                String rolSeleccionado = (String) rolesComboBox.getSelectedItem();
 
-                // Aquí puedes agregar lógica para verificar el inicio de sesión
-                // Por ejemplo, verificar si el usuario y la contraseña son correctos
+                // Verificar las credenciales en la base de datos
                 if (verificarCredenciales(usuario, contrasena, rolSeleccionado)) {
                     // Credenciales válidas, redirigir al usuario a la página correspondiente
                     redirigirSegunRol(rolSeleccionado, usuario);
@@ -140,51 +153,67 @@ public class inicio_session {
     }
 
     // Método para verificar las credenciales en la base de datos
-    private boolean verificarCredenciales(String nombreUsuario, String contrasena, String professionID) {
-        Connection conexion = null;
-        PreparedStatement statement = null;
-        ResultSet resultSet = null;
+    private boolean verificarCredenciales(String nombreUsuario, String contrasena, String professionName) {
+        // Consulta SQL para verificar las credenciales
+        String consulta = "SELECT * FROM Usuario WHERE nombreUsuario = ? AND contraseña = ? AND profession_ID = ?";
 
-        try {
-            conexion = ConexionDB.obtenerConexion();
-            String consulta = "SELECT * FROM usuario WHERE nombreUsuario = ? AND contraseña = ? AND profession_ID = ?";
-            statement = conexion.prepareStatement(consulta);
+        try (PreparedStatement statement = conexion.prepareStatement(consulta)) {
             statement.setString(1, nombreUsuario);
             statement.setString(2, contrasena);
-            statement.setString(3, professionID);
-            resultSet = statement.executeQuery();
+            statement.setString(3, getProfessionIDByName(professionName));
 
+            ResultSet resultSet = statement.executeQuery();
             return resultSet.next(); // Si hay resultados, las credenciales son válidas
         } catch (SQLException ex) {
             ex.printStackTrace();
             return false;
-        } finally {
-            ConexionDB.cerrarConexion(conexion);
         }
+    }
+
+    // Método para obtener el profession_ID por nombre de profesión
+    private String getProfessionIDByName(String professionName) {
+        // Consulta SQL para obtener el profession_ID por nombre
+        String consulta = "SELECT ID FROM Profesion WHERE nombre = ?";
+
+        try (PreparedStatement statement = conexion.prepareStatement(consulta)) {
+            statement.setString(1, professionName);
+
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("ID");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return null; // Si no se encuentra, devuelve null
     }
 
     // Método para redirigir según el rol
-    private void redirigirSegunRol(String professionID, String usuario) {
-        if (professionID.equals("1")) {
-            // Redirigir a la página de Mecánico y pasar el nombre de usuario
-            pag_mecanico paginaMecanico = new pag_mecanico(usuario);
-            // Lógica adicional para mostrar la página de Mecánico
-        } else if (professionID.equals("2")) {
-            // Redirigir a la página de Espía y pasar el nombre de usuario
-            pag_espia paginaEspia = new pag_espia(usuario);
-            // Lógica adicional para mostrar la página de Espía
-        } else if (professionID.equals("3")) {
-            // Redirigir a la página de Físico y pasar el nombre de usuario
-            pag_fisico paginaFisico = new pag_fisico(usuario);
-            // Lógica adicional para mostrar la página de Físico
-        } else if (professionID.equals("4")) {
-            // Redirigir a la página de Astronauta y pasar el nombre de usuario
-            pag_astronauta paginaAstronauta = new pag_astronauta(usuario);
-            // Lógica adicional para mostrar la página de Astronauta
+    private void redirigirSegunRol(String professionName, String usuario) {
+        switch (professionName) {
+            case "Astronauta":
+                // Crea y muestra la página del astronauta
+                SwingUtilities.invokeLater(() -> new pag_astronauta(usuario));
+                break;
+            case "Físico":
+                // Crea y muestra la página del físico
+                SwingUtilities.invokeLater(() -> new pag_fisico(usuario));
+                break;
+            case "Mecánico":
+                // Crea y muestra la página del mecánico
+                SwingUtilities.invokeLater(() -> new pag_mecanico(usuario));
+                break;
+            case "Espía":
+                // Crea y muestra la página del espía
+                SwingUtilities.invokeLater(() -> new pag_espia(usuario));
+                break;
+            default:
+                // Si el professionName no coincide con ningún caso, muestra un mensaje de error
+                JOptionPane.showMessageDialog(frame, "Rol no válido.");
+                break;
         }
-        // Agrega más casos según los roles que tengas
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -194,7 +223,6 @@ public class inicio_session {
         });
     }
 }
-
 
 
 
