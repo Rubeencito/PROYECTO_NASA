@@ -27,7 +27,7 @@ public class inicio_session {
     public inicio_session() {
         try {
             // Establecer la conexión a la base de datos MySQL
-            conexion = DriverManager.getConnection("jdbc:mysql://localhost/NASA", "root", "Admin123");
+            conexion = DriverManager.getConnection("jdbc:mysql://localhost/NASA", "root", "admin123");
         } catch (SQLException ex) {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(null, "Error al conectar a la base de datos.");
