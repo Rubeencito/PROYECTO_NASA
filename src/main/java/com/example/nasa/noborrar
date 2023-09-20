@@ -1,0 +1,66 @@
+package com.example.nasa;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Random;
+
+public class afegir_usuaris {
+
+    private static final String JDBC_URL = "jdbc:mysql://localhost:3306/nasa";
+    private static final String JDBC_USER = "root";
+    private static final String JDBC_PASSWORD = "admin123";
+
+    public static void main(String[] args) {
+        // Datos del usuario a insertar
+        String nombreUsuario = "pau";
+        String contraseña = "admin123";
+        int professionID = 1;  // Puedes cambiar este valor según tu necesidad
+
+        try (Connection conn = DriverManager.getConnection(JDBC_URL, JDBC_USER, JDBC_PASSWORD)) {
+            // Insertar usuario en la tabla Usuario
+            String insertUsuarioQuery = "INSERT INTO Usuario (nombreUsuario, contraseña, profession_ID) VALUES (?, ?, ?)";
+            PreparedStatement stmtUsuario = conn.prepareStatement(insertUsuarioQuery);
+            stmtUsuario.setString(1, nombreUsuario);
+            stmtUsuario.setString(2, contraseña);
+            stmtUsuario.setInt(3, professionID);
+            stmtUsuario.executeUpdate();
+
+            // Insertar en la tabla de Astronautas
+            String insertAstronautaQuery = "INSERT INTO Astronauta (ID, edat_primer_vol, nom, edat, missions_ok, missions_ko, adreça, rang_militar, profession_ID) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement stmtAstronauta = conn.prepareStatement(insertAstronautaQuery);
+
+            // Generar valores aleatorios para campos específicos
+            Random random = new Random();
+            int edat_primer_vol = random.nextInt(100);
+            int missions_ok = random.nextInt(100);
+            int missions_ko = random.nextInt(100);
+            String adreça = "Dirección astronauta";
+            String rang_militar = "Rango " + random.nextInt(100);
+
+            stmtAstronauta.setInt(1, generateUniqueID());  // Generar un ID único
+            stmtAstronauta.setInt(2, edat_primer_vol);
+            stmtAstronauta.setString(3, nombreUsuario);
+            stmtAstronauta.setInt(4, random.nextInt(100));  // Valor aleatorio para la edad
+            stmtAstronauta.setInt(5, missions_ok);
+            stmtAstronauta.setInt(6, missions_ko);
+            stmtAstronauta.setString(7, adreça);
+            stmtAstronauta.setString(8, rang_militar);
+            stmtAstronauta.setInt(9, professionID);
+
+            stmtAstronauta.executeUpdate();
+
+            System.out.println("Usuario insertado correctamente en la tabla de Astronautas.");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static int generateUniqueID() {
+        // Lógica para generar un ID único, puedes adaptarla según tus necesidades
+        // En este ejemplo, se genera un ID aleatorio entre 1 y 1000
+        Random random = new Random();
+        return random.nextInt(1000) + 1;
+    }
+}
