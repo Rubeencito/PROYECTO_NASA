@@ -7,7 +7,7 @@ public class pag_espia extends JFrame {
 
     public pag_espia(String nombreUsuario) {
         // Configura la ventana
-        setTitle("Página del Astronauta");
+        setTitle("Página del Espia");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(400, 300); // Establece el tamaño de la ventana
         setLocationRelativeTo(null); // Centra la ventana en la pantalla
@@ -17,7 +17,7 @@ public class pag_espia extends JFrame {
         panel.setLayout(new BorderLayout());
 
         // Crea una etiqueta con el saludo personalizado
-        JLabel saludoLabel = new JLabel("Hola Astronauta " + nombreUsuario);
+        JLabel saludoLabel = new JLabel("Hola Espia " + nombreUsuario);
         saludoLabel.setFont(new Font("Arial", Font.BOLD, 24)); // Establece la fuente y el tamaño
         saludoLabel.setHorizontalAlignment(JLabel.CENTER); // Centra el texto horizontalmente
 
