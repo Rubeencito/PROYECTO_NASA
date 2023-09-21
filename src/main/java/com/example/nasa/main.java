@@ -7,8 +7,8 @@ public class main {
             public void run() {
                new inicio_session();
                 String usuario = null;
-                pag_mecanico ventana = new pag_mecanico(usuario);
-                ventana.setVisible(true);
+                //pag_mecanico ventana = new pag_mecanico(usuario);
+                //ventana.setVisible(true);
 
             }
         });
