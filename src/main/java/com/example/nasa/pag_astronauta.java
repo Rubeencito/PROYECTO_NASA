@@ -18,7 +18,7 @@ public class pag_astronauta extends JFrame {
 
         try {
             // Conecta a la base de datos
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/NASA", "root", "admin123");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/NASA", "root", "patata");
             Statement stmt = conn.createStatement();
 
             // Obtén los datos del astronauta a partir del nombre de usuario
