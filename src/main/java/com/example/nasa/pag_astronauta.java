@@ -4,8 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.sql.*;
 import java.sql.ResultSet;
 import java.util.Random;
@@ -356,19 +354,8 @@ class pag_astronauta extends JFrame {
         gbc.insets = new Insets(100, 195, 0, 0);
         centerPanel.add(coordenadasLabel, gbc);
 
-        JButton mostrarDireccionButton = new JButton("Enviar coordenadas");
-        mostrarDireccionButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mostrarDireccionAleatoria();
-            }
-        });
 
-        gbc.gridy++;
-        gbc.gridx = 0;
-        gbc.anchor = GridBagConstraints.CENTER;
-        gbc.insets = new Insets(-420, 0, 0, 10);
-        centerPanel.add(mostrarDireccionButton, gbc);
+
 
         try {
             ImageIcon astronautIconRight = new ImageIcon("C:\\Users\\pauca\\IdeaProjects\\PROYECTO_NASA__\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
@@ -406,14 +393,7 @@ class pag_astronauta extends JFrame {
 
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        coordenadasFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-
-        coordenadasFrame.addWindowListener(new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                coordenadasFrame.setVisible(false);
-            }
-        });
+        coordenadasFrame.add(mainPanel);
         coordenadasFrame.setVisible(true);
     }
 
