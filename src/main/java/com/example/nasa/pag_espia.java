@@ -19,8 +19,10 @@ public class pag_espia extends JFrame {
 
     // Conexión a la base de datos MySQL
     private Connection conexion;
+    private String nombreUsuario; // Nombre del usuario con sesión iniciada
 
     public pag_espia(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario; // Guardar el nombre de usuario con sesión iniciada
         setTitle("Página del espía");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 600);
@@ -141,23 +143,38 @@ public class pag_espia extends JFrame {
         tabbedPane.addTab("Mensaje", principalPanel);
 
         // Pestaña de Datos
-        JPanel datosPanel = new JPanel(new BorderLayout());
+        JPanel datosPanel = new JPanel(new BorderLayout()) {
+            // Sobreescribir el método paintComponent para establecer la imagen de fondo
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                // Cargar la imagen de fondo
+                Image backgroundImage = new ImageIcon("src/main/java/com/example/nasa/datos.jpg").getImage();
+                // Dibujar la imagen de fondo
+                g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+        };
 
-        // Panel para mostrar los datos
+        // Panel para mostrar los datos con un borde redondeado
         JPanel datosMostrarPanel = new JPanel(new GridLayout(2, 1));
+        datosMostrarPanel.setOpaque(false); // Hacer el panel transparente
         datosMostrarPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Campo de teléfono (No editable)
         JLabel telefonoLabel = new JLabel("Teléfono:");
+        telefonoLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        telefonoLabel.setForeground(Color.DARK_GRAY); // Color de texto más oscuro
         telefonoTextField = new JTextField(20);
         telefonoTextField.setEditable(false);
-        telefonoTextField.setFont(new Font("Arial", Font.PLAIN, 20));
+        telefonoTextField.setFont(new Font("Arial", Font.PLAIN, 18));
 
         // Campo de "nom_clau" (No editable)
         JLabel nomClauLabel = new JLabel("Nom Clau:");
+        nomClauLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        nomClauLabel.setForeground(Color.DARK_GRAY); // Color de texto más oscuro
         nomClauTextField = new JTextField(20);
         nomClauTextField.setEditable(false);
-        nomClauTextField.setFont(new Font("Arial", Font.PLAIN, 20));
+        nomClauTextField.setFont(new Font("Arial", Font.PLAIN, 18));
 
         datosMostrarPanel.add(telefonoLabel);
         datosMostrarPanel.add(telefonoTextField);
@@ -166,6 +183,10 @@ public class pag_espia extends JFrame {
 
         // Botón para cargar datos desde la base de datos
         JButton cargarDatosButton = new JButton("Cargar Datos");
+        cargarDatosButton.setFont(new Font("Arial", Font.BOLD, 18));
+        cargarDatosButton.setBackground(new Color(0, 128, 255)); // Color de fondo azul
+        cargarDatosButton.setForeground(Color.WHITE); // Color de texto blanco
+        cargarDatosButton.setBorder(BorderFactory.createLineBorder(Color.BLUE, 2)); // Borde azul
         cargarDatosButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -203,9 +224,10 @@ public class pag_espia extends JFrame {
 
     private void cargarDatosDesdeBaseDeDatos() {
         try {
-            // Obtener los datos de la base de datos
-            String sql = "SELECT nom_clau, telefon FROM espia";
+            // Obtener los datos del usuario con sesión iniciada desde la base de datos
+            String sql = "SELECT nom_clau, telefon FROM espia WHERE ID = (SELECT ID FROM Usuario WHERE nombreUsuario = ?)";
             PreparedStatement preparedStatement = conexion.prepareStatement(sql);
+            preparedStatement.setString(1, nombreUsuario);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
@@ -224,6 +246,7 @@ public class pag_espia extends JFrame {
             JOptionPane.showMessageDialog(this, "Error al cargar los datos desde la base de datos.");
         }
     }
+
 
     private String cifrarMensaje(String mensaje) {
         StringBuilder mensajeCifrado = new StringBuilder();
@@ -244,7 +267,7 @@ public class pag_espia extends JFrame {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new pag_espia("Nombre de Usuario");
+                new pag_espia("Nombre de Usuario"); // Debes proporcionar el nombre de usuario aquí
             }
         });
     }
