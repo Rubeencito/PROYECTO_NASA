@@ -17,8 +17,10 @@ import java.util.Date;
 
 public class pag_mecanico extends JFrame {
     private BufferedImage fondo; // Para almacenar la imagen de fondo
-    private  JButton ficharButton; // Declarar como variable de instancia
+    private JButton ficharButton; // Declarar como variable de instancia
     private boolean entradaRegistrada = false; // Agregar una variable para el estado de fichaje
+
+    private JButton adminButton; // Declarar como variable de instancia
 
     public pag_mecanico(String nombreUsuario) {
         // Configura la ventana
@@ -33,11 +35,11 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
 
-        // Crea un JLayeredPane para superponer componentes
+        // Crea un JLayeredPane para superponer componentes ----------------------------
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
 
-        // Crea un panel para la foto de fondo
+        // Crea un panel para la foto de fondo --------------------------------------------------------------------------
         JPanel fondoPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -50,14 +52,14 @@ public class pag_mecanico extends JFrame {
         fondoPanel.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(fondoPanel, Integer.valueOf(0)); // Fondo
 
-        // Crea una etiqueta con el saludo personalizado
+        // Crea una etiqueta con el saludo personalizado ------------------------------------------------------------------------
         JLabel saludoLabel = new JLabel("Hola Mecánico " + nombreUsuario);
         saludoLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Establece la fuente y el tamaño a 16
         saludoLabel.setVerticalAlignment(JLabel.TOP); // Alinea el texto arriba
         saludoLabel.setBounds(50, 50, 300, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         layeredPane.add(saludoLabel, Integer.valueOf(1)); // Saludo
 
-        // Crea un panel para mostrar la ficha técnica del usuario
+        // Crea un panel para mostrar la ficha técnica del usuario ----------------------------------------------------------------
         JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2)); // Usamos un diseño de cuadrícula para mostrar los datos
         fichaTecnicaPanel.setBackground(Color.WHITE); // Fondo blanco para la ficha técnica
         fichaTecnicaPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -67,9 +69,7 @@ public class pag_mecanico extends JFrame {
         fichaTecnicaPanel.setBounds(50, 100, 300, 300); // Ajusta las coordenadas y dimensiones según tu diseño
         layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
 
-
-
-        // Conecta a la base de datos y consulta los datos del usuario
+        // Conecta a la base de datos y consulta los datos del usuario ---------------------------------------------------------------------------
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
             String query = "SELECT * FROM Mecanico WHERE nom = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
@@ -85,14 +85,13 @@ public class pag_mecanico extends JFrame {
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Años de Experiencia:", Integer.toString(resultSet.getInt("anys_experiencia")));
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Ciudad:", resultSet.getString("ciutat"));
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Sexo:", resultSet.getString("sexe"));
+
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-
-
-        // Agrega un botón para generar y mostrar el archivo de texto
+        // Agrega un botón para generar y mostrar el archivo de texto ------------------------------------------------------------
         JButton mostrarArchivoButton = new JButton("Mostrar Archivo de Texto");
         mostrarArchivoButton.setBounds(50, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         mostrarArchivoButton.addActionListener(new ActionListener() {
@@ -103,7 +102,7 @@ public class pag_mecanico extends JFrame {
         });
         layeredPane.add(mostrarArchivoButton, Integer.valueOf(3)); // Botón
 
-        // Crea un botón para fichar entrada o salida
+        // Crea un botón para fichar entrada o salida ------------------------------------------------------------------------
         ficharButton = new JButton("Fichar Entrada"); // Asigna el botón a la variable de instancia
         ficharButton.setBounds(300, 450, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         ficharButton.addActionListener(new ActionListener() {
@@ -122,19 +121,41 @@ public class pag_mecanico extends JFrame {
         });
         layeredPane.add(ficharButton, Integer.valueOf(4)); // Botón de fichar
 
-        // Agrega el JLayeredPane al JFrame
-        add(layeredPane);
+        // Boton para el CRUD --------------------------------------------------
+        adminButton = new JButton("Administrar Datos");
+        adminButton.setBounds(500, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
 
-        // Hace visible la ventana
+// Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" -------------------------------------------------------------------
+        if (nombreUsuario.equals("admin")) {
+            adminButton.setVisible(true);
+        } else {
+            adminButton.setVisible(false);
+        }
+
+        adminButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (nombreUsuario.equals("admin")) {
+                    // Abre la ventana de administración
+                    SwingUtilities.invokeLater(() -> new AdminWindow(nombreUsuario));
+                }
+            }
+        });
+        layeredPane.add(adminButton, Integer.valueOf(5)); // Botón de administración
+
+
+        // Agrega el JLayeredPane al JFrame --------------------------------
+        add(layeredPane);
+        // Hace visible la ventana -----------------------------
         setVisible(true);
     }
 
-    // Método para agregar un campo a la ficha técnica
+    // Método para agregar un campo a la ficha técnica ----------------------------------------------------------------------------
     private void agregarCampoFichaTecnica(JPanel panel, String etiqueta, String valor) {
         panel.add(new JLabel(etiqueta));
         panel.add(new JLabel(valor));
     }
-    // Método para mostrar el archivo de texto
+    // Método para mostrar el archivo de texto ------------------------------------------------------------------------------------
     private void generarYMostrarArchivoTexto() {
         try {
             // Conecta a la base de datos
@@ -171,7 +192,7 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-    // Método para registrar un fichaje de entrada en la base de datos
+    // Método para registrar un fichaje de entrada en la base de datos ----------------------------------------------------------------------
     private void ficharEntrada() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
@@ -188,8 +209,7 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-
-    // Método para registrar un fichaje de salida en la base de datos
+    // Método para registrar un fichaje de salida en la base de datos --------------------------------------------------------------
     private void ficharSalida() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
@@ -206,7 +226,6 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new pag_mecanico("Nombre de Usuario"));
     }
