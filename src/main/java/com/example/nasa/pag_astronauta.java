@@ -354,8 +354,19 @@ class pag_astronauta extends JFrame {
         gbc.insets = new Insets(100, 195, 0, 0);
         centerPanel.add(coordenadasLabel, gbc);
 
+        JButton mostrarDireccionButton = new JButton("Enviar coordenadas");
+        mostrarDireccionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarDireccionAleatoria();
+            }
+        });
 
-
+        gbc.gridy++;  // Incrementar gridy para colocar el botón debajo del texto
+        gbc.gridx = 0;  // Establecer gridx a 0 para que el botón esté en la primera columna
+        gbc.anchor = GridBagConstraints.CENTER;  // Ajustar la posición al centro
+        gbc.insets = new Insets(-420, 0, 0, 10);  // Cambio en las inserciones para posicionar el botón
+        centerPanel.add(mostrarDireccionButton, gbc);
 
         try {
             ImageIcon astronautIconRight = new ImageIcon("C:\\Users\\pauca\\IdeaProjects\\PROYECTO_NASA__\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
