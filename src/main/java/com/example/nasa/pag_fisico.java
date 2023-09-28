@@ -1,5 +1,4 @@
 package com.example.nasa;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -18,36 +17,44 @@ import java.util.Date;
 public class pag_fisico extends JFrame {
 
     private BufferedImage fondo;
-    private  JButton ficharButton;
+    private JButton ficharButton;
+    private JButton calcularDistanciaButton;
+    private JButton calcularSuperficieButton;
+    private JComboBox<String> planetasComboBox;
+    private JPanel planetasPanel;
+    private JLabel resultadoLabel;
+
     private boolean entradaRegistrada = false;
+
     public pag_fisico(String nombreUsuario) {
 
         setTitle("Pàgina del Físic");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+
         try {
-            fondo = ImageIO.read(new File("C:\\Users\\ddiaz\\OneDrive\\Escritorio\\die.jpg")); // Reemplaza con la ruta de tu imagen
+            fondo = ImageIO.read(new File("C:\\Users\\ddiaz\\OneDrive\\Escritorio\\die.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
 
-        JLabel saludoLabel = new JLabel("Hola Mecánico " + nombreUsuario);
-        saludoLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Establece la fuente y el tamaño a 16
-        saludoLabel.setVerticalAlignment(JLabel.TOP); // Alinea el texto arriba
-        saludoLabel.setBounds(50, 50, 300, 30); // Ajusta las coordenadas y dimensiones según tu diseño
-        layeredPane.add(saludoLabel, Integer.valueOf(1)); // Saludo
+        JLabel saludoLabel = new JLabel("Hola Doctor " + nombreUsuario);
+        saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        saludoLabel.setVerticalAlignment(JLabel.TOP);
+        saludoLabel.setBounds(50, 50, 300, 30);
+        layeredPane.add(saludoLabel, Integer.valueOf(1));
 
-        JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2)); // Usamos un diseño de cuadrícula para mostrar los datos
-        fichaTecnicaPanel.setBackground(Color.WHITE); // Fondo blanco para la ficha técnica
+        JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2));
+        fichaTecnicaPanel.setBackground(Color.WHITE);
         fichaTecnicaPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createEmptyBorder(10, 10, 10, 10), // Márgenes externos
-                BorderFactory.createLineBorder(Color.BLACK) // Borde negro
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createLineBorder(Color.BLACK)
         ));
-        fichaTecnicaPanel.setBounds(50, 100, 300, 300); // Ajusta las coordenadas y dimensiones según tu diseño
-        layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
-
+        fichaTecnicaPanel.setBounds(50, 100, 300, 300);
+        layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2));
 
         JPanel fondoPanel = new JPanel() {
             @Override
@@ -59,37 +66,56 @@ public class pag_fisico extends JFrame {
             }
         };
         fondoPanel.setBounds(0, 0, getWidth(), getHeight());
-        layeredPane.add(fondoPanel, Integer.valueOf(0)); // Fondo
+        layeredPane.add(fondoPanel, Integer.valueOf(0));
 
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
-            String query = "SELECT * FROM Mecanico WHERE nom = ?";
+            String query = "SELECT * FROM Fisico WHERE nom = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, nombreUsuario);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             if (resultSet.next()) {
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Nombre:", resultSet.getString("nom"));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Salario:", resultSet.getBigDecimal("salari").toString());
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Edad:", Integer.toString(resultSet.getInt("edat")));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Número de Taller:", Integer.toString(resultSet.getInt("numero_taller")));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Dirección:", resultSet.getString("adreça"));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Años de Experiencia:", Integer.toString(resultSet.getInt("anys_experiencia")));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Ciudad:", resultSet.getString("ciutat"));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Sexo:", resultSet.getString("sexe"));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Nom:", resultSet.getString("nom"));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Sexe:", resultSet.getString("sexe"));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Salari:", resultSet.getBigDecimal("salari").toString());
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Experiencia:", Integer.toString(resultSet.getInt("edat")));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Titulació acadèmica:", Integer.toString(resultSet.getInt("anys_experiencia")));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Adreça:", resultSet.getString("adreça"));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Ciutat:", resultSet.getString("ciutat"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        ficharButton = new JButton("Fichar Entrada"); // Asigna el botón a la variable de instancia
-        ficharButton.setBounds(300, 450, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        calcularDistanciaButton = new JButton("Calcular Distància");
+        calcularDistanciaButton.setBounds(50, 450, 150, 30);
+        calcularDistanciaButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                mostrarRecuadroDatos();
+            }
+        });
+        layeredPane.add(calcularDistanciaButton, Integer.valueOf(3));
+
+        calcularSuperficieButton = new JButton("Calcular Superfície");
+        calcularSuperficieButton.setBounds(210, 450, 150, 30);
+        calcularSuperficieButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Implementa la lógica para calcular superfície aquí
+            }
+        });
+        layeredPane.add(calcularSuperficieButton, Integer.valueOf(6));
+
+        ficharButton = new JButton("Fichar Entrada");
+        ficharButton.setBounds(470, 450, 150, 30);
         ficharButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!entradaRegistrada) {
                     ficharEntrada();
                     entradaRegistrada = true;
-                    ficharButton.setText("Fichar Salida");
+                    ficharButton.setText("Fichar Sortida");
                 } else {
                     ficharSalida();
                     entradaRegistrada = false;
@@ -97,7 +123,47 @@ public class pag_fisico extends JFrame {
                 }
             }
         });
-        layeredPane.add(ficharButton, Integer.valueOf(4)); // Botón de fichar
+        layeredPane.add(ficharButton, Integer.valueOf(9));
+
+        // Creación del panel para calcular distancia
+        planetasPanel = new JPanel();
+        planetasPanel.setBounds(600, 100, 400, 300);
+        planetasPanel.setBackground(Color.WHITE);
+        planetasPanel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createEmptyBorder(10, 10, 10, 10),
+                BorderFactory.createLineBorder(Color.BLACK)
+        ));
+        planetasPanel.setVisible(false);
+        planetasPanel.setLayout(new BorderLayout());
+
+        JLabel tituloCalculoLabel = new JLabel("Calcule la distància de la Terra a un planeta");
+        tituloCalculoLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        tituloCalculoLabel.setHorizontalAlignment(JLabel.CENTER);
+        planetasPanel.add(tituloCalculoLabel, BorderLayout.NORTH);
+
+        JPanel calculoPanel = new JPanel();
+        calculoPanel.setLayout(new FlowLayout());
+        planetasPanel.add(calculoPanel, BorderLayout.CENTER);
+
+        String[] nombresPlanetas = {"Mercuri", "Venus", "Sol", "Marte", "Júpiter", "Saturn", "Urà", "Neptú"};
+        planetasComboBox = new JComboBox<>(nombresPlanetas);
+        calculoPanel.add(planetasComboBox);
+
+        JButton calcularButton = new JButton("Calcular");
+        calcularButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                calcularDistancia();
+            }
+        });
+        calculoPanel.add(calcularButton);
+
+        resultadoLabel = new JLabel("");
+        resultadoLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        resultadoLabel.setHorizontalAlignment(JLabel.CENTER);
+        planetasPanel.add(resultadoLabel, BorderLayout.SOUTH);
+
+        layeredPane.add(planetasPanel, Integer.valueOf(8));
 
         // Agrega el JLayeredPane al JFrame
         add(layeredPane);
@@ -105,6 +171,7 @@ public class pag_fisico extends JFrame {
         // Hace visible la ventana
         setVisible(true);
     }
+
     private void agregarCampoFichaTecnica(JPanel panel, String etiqueta, String valor) {
         panel.add(new JLabel(etiqueta));
         panel.add(new JLabel(valor));
@@ -126,6 +193,7 @@ public class pag_fisico extends JFrame {
             e.printStackTrace();
         }
     }
+
     private void ficharSalida() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
@@ -142,8 +210,33 @@ public class pag_fisico extends JFrame {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new pag_mecanico("Nombre de Usuario"));
+
+    private void mostrarRecuadroDatos() {
+        planetasPanel.setVisible(true);
     }
 
+    private void calcularDistancia() {
+        String planetaSeleccionado = (String) planetasComboBox.getSelectedItem();
+        String distancia = obtenerDistanciaTierra(planetaSeleccionado);
+        resultadoLabel.setText("La Terra està a " + distancia + " km de " + planetaSeleccionado);
+    }
+
+    private String obtenerDistanciaTierra(String planeta) {
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
+            String query = "SELECT distancia_terra FROM planetas WHERE nom = ?";
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1, planeta);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("distancia_terra");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return "Desconeguda";
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new pag_fisico("Nom d'Usuari"));
+    }
 }
