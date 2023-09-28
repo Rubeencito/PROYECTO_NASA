@@ -30,7 +30,7 @@ public class pag_mecanico extends JFrame {
 
         // Carga la imagen de fondo desde un archivo
         try {
-            fondo = ImageIO.read(new File("src/main/java/com/example/nasa/fondoMecanico.jpg")); // Reemplaza con la ruta de tu imagen
+            fondo = ImageIO.read(new File("src/main/java/com/example/nasa/fondoMecanico.jpg")); // Asegúrate de que la imagen esté en la ubicación correcta
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -51,13 +51,20 @@ public class pag_mecanico extends JFrame {
         };
         fondoPanel.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(fondoPanel, Integer.valueOf(0)); // Fondo
+        fondoPanel.setOpaque(false); // Establece el panel de fondo como no opaco para ver la imagen de fondo
+
+
 
         // Crea una etiqueta con el saludo personalizado ------------------------------------------------------------------------
         JLabel saludoLabel = new JLabel("Hola Mecánico " + nombreUsuario);
         saludoLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Establece la fuente y el tamaño a 16
         saludoLabel.setVerticalAlignment(JLabel.TOP); // Alinea el texto arriba
-        saludoLabel.setBounds(50, 50, 300, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        //saludoLabel.setVerticalAlignment(JLabel.CENTER);
+        saludoLabel.setBounds(520, 50, 300, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         layeredPane.add(saludoLabel, Integer.valueOf(1)); // Saludo
+
+
+
 
         // Crea un panel para mostrar la ficha técnica del usuario ----------------------------------------------------------------
         JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2)); // Usamos un diseño de cuadrícula para mostrar los datos
@@ -66,7 +73,7 @@ public class pag_mecanico extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10), // Márgenes externos
                 BorderFactory.createLineBorder(Color.BLACK) // Borde negro
         ));
-        fichaTecnicaPanel.setBounds(50, 100, 300, 300); // Ajusta las coordenadas y dimensiones según tu diseño
+        fichaTecnicaPanel.setBounds(470, 100, 300, 300); // Ajusta las coordenadas y dimensiones según tu diseño
         layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
 
         // Conecta a la base de datos y consulta los datos del usuario ---------------------------------------------------------------------------
@@ -93,7 +100,7 @@ public class pag_mecanico extends JFrame {
 
         // Agrega un botón para generar y mostrar el archivo de texto ------------------------------------------------------------
         JButton mostrarArchivoButton = new JButton("Mostrar Archivo de Texto");
-        mostrarArchivoButton.setBounds(50, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        mostrarArchivoButton.setBounds(100, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         mostrarArchivoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -148,6 +155,30 @@ public class pag_mecanico extends JFrame {
         add(layeredPane);
         // Hace visible la ventana -----------------------------
         setVisible(true);
+
+        // Agrega un botón "Salir" en el constructor de la clase pag_mecanico
+        JButton salirButton = new JButton("Salir");
+        salirButton.setBounds(700, 450, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        layeredPane.add(salirButton, Integer.valueOf(6)); // Botón de Salir
+
+// Agrega un ActionListener para el botón "Salir"
+        salirButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirmacion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Confirmar Salida", JOptionPane.YES_NO_OPTION);
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // Cierra la página actual (this)
+                    dispose();
+
+                    // Crea una instancia de inicio_session
+                    SwingUtilities.invokeLater(() -> new inicio_session());
+                }
+            }
+        });
+
+
+
+
     }
 
     // Método para agregar un campo a la ficha técnica ----------------------------------------------------------------------------
