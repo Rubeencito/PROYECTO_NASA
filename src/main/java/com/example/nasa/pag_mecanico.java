@@ -46,7 +46,7 @@ public class pag_mecanico extends JFrame {
         //saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
         saludoLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
         saludoLabel.setForeground(Color.WHITE);
-        saludoLabel.setBounds(500, 50, 400, 70); // Ajusta las coordenadas y dimensiones según tu diseño
+        saludoLabel.setBounds(450, 50, 400, 70); // Ajusta las coordenadas y dimensiones según tu diseño
         backgroundLabel.add(saludoLabel); // Agregamos la etiqueta al JLabel del fondo
 
         // -------------------------------- FICHA TECNICA -------------------------
@@ -59,7 +59,7 @@ public class pag_mecanico extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10), // Márgenes externos
                 BorderFactory.createLineBorder(Color.BLACK) // Borde negro
         ));
-        fichaTecnicaPanel.setBounds(200, 170, 400, 400); // Ajusta las coordenadas y dimensiones según tu diseño
+        fichaTecnicaPanel.setBounds(250, 170, 400, 400); // Ajusta las coordenadas y dimensiones según tu diseño
         backgroundLabel.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
 
         // Conecta a la base de datos y consulta los datos del usuario ---------------------------------------------------------------------------
@@ -86,7 +86,7 @@ public class pag_mecanico extends JFrame {
 
         // Agrega un botón para generar y mostrar el archivo de texto ------------------------------------------------------------
         JButton mostrarArchivoButton = new JButton("Mostrar vehiculos");
-        mostrarArchivoButton.setBounds(650, 170, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        mostrarArchivoButton.setBounds(700, 170, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         mostrarArchivoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -97,7 +97,7 @@ public class pag_mecanico extends JFrame {
 
         // Crea un botón para fichar entrada o salida ------------------------------------------------------------------------
         ficharButton = new JButton("Fichar Entrada"); // Asigna el botón a la variable de instancia
-        ficharButton.setBounds(650, 220, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        ficharButton.setBounds(700, 220, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         ficharButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -116,7 +116,7 @@ public class pag_mecanico extends JFrame {
 
         // Boton para el CRUD --------------------------------------------------
         adminButton = new JButton("Administrar Datos");
-        adminButton.setBounds(650, 270, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        adminButton.setBounds(700, 270, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
 
 // Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" -------------------------------------------------------------------
         if (nombreUsuario.equals("admin")) {
@@ -140,7 +140,7 @@ public class pag_mecanico extends JFrame {
 
         // Agrega un botón "Salir" en el constructor de la clase pag_mecanico
         JButton salirButton = new JButton("Salir");
-        salirButton.setBounds(650, 320, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        salirButton.setBounds(700, 540, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         salirButton.setBorder(BorderFactory.createLineBorder(Color.white, 2));
         salirButton.setBackground(Color.BLUE);
         salirButton.setFont(new Font("Tahoma", Font.BOLD, 14));
