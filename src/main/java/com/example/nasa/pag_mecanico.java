@@ -238,7 +238,7 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-    // Método para registrar un fichaje de salida en la base de datos --------------------------------------------------------------
+    // Método para registrar un fichaje de salida en la base de datos ------------------------------------------------------------------
     private void ficharSalida() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
