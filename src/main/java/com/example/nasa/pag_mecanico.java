@@ -16,54 +16,40 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class pag_mecanico extends JFrame {
-    private BufferedImage fondo; // Para almacenar la imagen de fondo
     private JButton ficharButton; // Declarar como variable de instancia
     private boolean entradaRegistrada = false; // Agregar una variable para el estado de fichaje
 
     private JButton adminButton; // Declarar como variable de instancia
-
     public pag_mecanico(String nombreUsuario) {
         // Configura la ventana
         setTitle("Página del Mecánico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza la ventana a pantalla completa
 
+        // Obtiene las dimensiones de la pantalla
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
         // Carga la imagen de fondo desde un archivo
-        try {
-            fondo = ImageIO.read(new File("src/main/java/com/example/nasa/fondoMecanico.jpg")); // Asegúrate de que la imagen esté en la ubicación correcta
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        ImageIcon backgroundImage = new ImageIcon("src/main/java/com/example/nasa/fondoMecanico.jpg");
+        Image img = backgroundImage.getImage();
+        // Escala la imagen para que coincida con las dimensiones de la pantalla
+        img = img.getScaledInstance(screenSize.width, screenSize.height, Image.SCALE_SMOOTH);
+        backgroundImage = new ImageIcon(img);
 
-        // Crea un JLayeredPane para superponer componentes ----------------------------
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
+        // Crea un JLabel con la imagen de fondo
+        JLabel backgroundLabel = new JLabel(backgroundImage);
+        backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
+        add(backgroundLabel);
 
-        // Crea un panel para la foto de fondo --------------------------------------------------------------------------
-        JPanel fondoPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (fondo != null) {
-                    g.drawImage(fondo, 0, 0, getWidth(), getHeight(), this);
-                }
-            }
-        };
-        fondoPanel.setBounds(0, 0, getWidth(), getHeight());
-        layeredPane.add(fondoPanel, Integer.valueOf(0)); // Fondo
-        fondoPanel.setOpaque(false); // Establece el panel de fondo como no opaco para ver la imagen de fondo
-
-
-
-        // Crea una etiqueta con el saludo personalizado ------------------------------------------------------------------------
+        // Crea una etiqueta con el saludo personalizado
         JLabel saludoLabel = new JLabel("Hola Mecánico " + nombreUsuario);
-        saludoLabel.setFont(new Font("Arial", Font.BOLD, 16)); // Establece la fuente y el tamaño a 16
-        saludoLabel.setVerticalAlignment(JLabel.TOP); // Alinea el texto arriba
-        //saludoLabel.setVerticalAlignment(JLabel.CENTER);
-        saludoLabel.setBounds(520, 50, 300, 30); // Ajusta las coordenadas y dimensiones según tu diseño
-        layeredPane.add(saludoLabel, Integer.valueOf(1)); // Saludo
+        //saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        saludoLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
+        saludoLabel.setForeground(Color.WHITE);
+        saludoLabel.setBounds(500, 50, 400, 70); // Ajusta las coordenadas y dimensiones según tu diseño
+        backgroundLabel.add(saludoLabel); // Agregamos la etiqueta al JLabel del fondo
 
-
+        // -------------------------------- FICHA TECNICA -------------------------
 
 
         // Crea un panel para mostrar la ficha técnica del usuario ----------------------------------------------------------------
@@ -73,8 +59,8 @@ public class pag_mecanico extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10), // Márgenes externos
                 BorderFactory.createLineBorder(Color.BLACK) // Borde negro
         ));
-        fichaTecnicaPanel.setBounds(470, 100, 300, 300); // Ajusta las coordenadas y dimensiones según tu diseño
-        layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
+        fichaTecnicaPanel.setBounds(200, 170, 400, 400); // Ajusta las coordenadas y dimensiones según tu diseño
+        backgroundLabel.add(fichaTecnicaPanel, Integer.valueOf(2)); // Ficha técnica
 
         // Conecta a la base de datos y consulta los datos del usuario ---------------------------------------------------------------------------
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
@@ -99,19 +85,19 @@ public class pag_mecanico extends JFrame {
         }
 
         // Agrega un botón para generar y mostrar el archivo de texto ------------------------------------------------------------
-        JButton mostrarArchivoButton = new JButton("Mostrar Archivo de Texto");
-        mostrarArchivoButton.setBounds(100, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        JButton mostrarArchivoButton = new JButton("Mostrar vehiculos");
+        mostrarArchivoButton.setBounds(650, 170, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         mostrarArchivoButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 generarYMostrarArchivoTexto();
             }
         });
-        layeredPane.add(mostrarArchivoButton, Integer.valueOf(3)); // Botón
+        backgroundLabel.add(mostrarArchivoButton, Integer.valueOf(3)); // Botón
 
         // Crea un botón para fichar entrada o salida ------------------------------------------------------------------------
         ficharButton = new JButton("Fichar Entrada"); // Asigna el botón a la variable de instancia
-        ficharButton.setBounds(300, 450, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        ficharButton.setBounds(650, 220, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         ficharButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -126,11 +112,11 @@ public class pag_mecanico extends JFrame {
                 }
             }
         });
-        layeredPane.add(ficharButton, Integer.valueOf(4)); // Botón de fichar
+        backgroundLabel.add(ficharButton, Integer.valueOf(4)); // Botón de fichar
 
         // Boton para el CRUD --------------------------------------------------
         adminButton = new JButton("Administrar Datos");
-        adminButton.setBounds(500, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        adminButton.setBounds(650, 270, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
 
 // Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" -------------------------------------------------------------------
         if (nombreUsuario.equals("admin")) {
@@ -148,20 +134,20 @@ public class pag_mecanico extends JFrame {
                 }
             }
         });
-        layeredPane.add(adminButton, Integer.valueOf(5)); // Botón de administración
+        backgroundLabel.add(adminButton, Integer.valueOf(5)); // Botón de administración
 
 
-        // Agrega el JLayeredPane al JFrame --------------------------------
-        add(layeredPane);
-        // Hace visible la ventana -----------------------------
-        setVisible(true);
 
         // Agrega un botón "Salir" en el constructor de la clase pag_mecanico
         JButton salirButton = new JButton("Salir");
-        salirButton.setBounds(700, 450, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
-        layeredPane.add(salirButton, Integer.valueOf(6)); // Botón de Salir
+        salirButton.setBounds(650, 320, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        salirButton.setBorder(BorderFactory.createLineBorder(Color.white, 2));
+        salirButton.setBackground(Color.BLUE);
+        salirButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        salirButton.setForeground(Color.WHITE);
+        backgroundLabel.add(salirButton, Integer.valueOf(6)); // Botón de Salir
 
-// Agrega un ActionListener para el botón "Salir"
+        // Agrega un ActionListener para el botón "Salir"
         salirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -179,7 +165,19 @@ public class pag_mecanico extends JFrame {
 
 
 
-    }
+
+
+
+
+
+
+
+
+
+        // ------------- Hace visible la ventana -----------------
+        setVisible(true);
+
+    } // ---------------- // ACABA CLASSE //-------------//
 
     // Método para agregar un campo a la ficha técnica ----------------------------------------------------------------------------
     private void agregarCampoFichaTecnica(JPanel panel, String etiqueta, String valor) {
