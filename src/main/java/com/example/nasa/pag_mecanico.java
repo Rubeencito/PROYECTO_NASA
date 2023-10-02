@@ -5,7 +5,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import javax.imageio.ImageIO;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -30,14 +33,14 @@ public class pag_mecanico extends JFrame {
 
         // Carga la imagen de fondo desde un archivo
         try {
-            fondo = ImageIO.read(new File("src/main/java/com/example/nasa/fondoMecanico.jpg")); // Asegúrate de que la imagen esté en la ubicación correcta
+            fondo = ImageIO.read(new File("C:\\Users\\pauca\\IdeaProjects\\PROYECTO_NASA__\\src\\main\\java\\com\\example\\nasa\\astronauta.png")); // Asegúrate de que la imagen esté en la ubicación correcta
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         // Crea un JLayeredPane para superponer componentes ----------------------------
         JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
+        layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight())); PAU
 
         // Crea un panel para la foto de fondo --------------------------------------------------------------------------
         JPanel fondoPanel = new JPanel() {
@@ -52,6 +55,9 @@ public class pag_mecanico extends JFrame {
         fondoPanel.setBounds(0, 0, getWidth(), getHeight());
         layeredPane.add(fondoPanel, Integer.valueOf(0)); // Fondo
         fondoPanel.setOpaque(false); // Establece el panel de fondo como no opaco para ver la imagen de fondo
+
+        // Resto del código...
+
 
 
 
@@ -259,5 +265,4 @@ public class pag_mecanico extends JFrame {
     }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new pag_mecanico("Nombre de Usuario"));
-    }
-}
+    }}

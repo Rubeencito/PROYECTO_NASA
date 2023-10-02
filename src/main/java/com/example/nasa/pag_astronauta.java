@@ -52,18 +52,16 @@ class pag_astronauta extends JFrame {
         menuBar.add(menu);
         setJMenuBar(menuBar);
 
-        mainPanel = new JPanel(new BorderLayout());  // Cambiamos a BorderLayout
+        mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBackground(new Color(200, 200, 200));
         mainPanel.setPreferredSize(new Dimension(800, 600));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));  // Ajustar el espaciado superior
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(800, 600));
 
-        // Configurar el layout como GridBagLayout
         layeredPane.setLayout(new GridBagLayout());
 
-        // Configurar restricciones para el texto
         GridBagConstraints textConstraints = new GridBagConstraints();
         textConstraints.gridx = 0;
         textConstraints.gridy = 0;
@@ -71,13 +69,11 @@ class pag_astronauta extends JFrame {
         textConstraints.anchor = GridBagConstraints.NORTH;
         textConstraints.insets = new Insets(30, 0, 0, 0);
 
-        // Agregar el texto
         JLabel welcomeLabel = new JLabel("¡Benvingut ASTRONAUTA " + nombreUsuario + "!");
         welcomeLabel.setFont(new Font("Arial", Font.BOLD, 30));
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         layeredPane.add(welcomeLabel, textConstraints);
 
-        // Configurar restricciones para la imagen
         GridBagConstraints imageConstraints = new GridBagConstraints();
         imageConstraints.gridx = 0;
         imageConstraints.gridy = 1;
@@ -85,7 +81,6 @@ class pag_astronauta extends JFrame {
         imageConstraints.anchor = GridBagConstraints.NORTH;
         imageConstraints.insets = new Insets(10, 0, 0, 0);
 
-        // Agregar la imagen del astronauta
         try {
             ImageIcon astronautIcon = new ImageIcon("C:\\Users\\pauca\\IdeaProjects\\PROYECTO_NASA__\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
             int imageWidth = astronautIcon.getIconWidth() / 2;
@@ -93,12 +88,11 @@ class pag_astronauta extends JFrame {
             astronautIcon.setImage(astronautIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT));
             JLabel astronautLabel = new JLabel(astronautIcon);
             astronautLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            layeredPane.add(astronautLabel, imageConstraints);  // Capa superior
+            layeredPane.add(astronautLabel, imageConstraints);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Agregar el JLayeredPane al centro de la ventana
         add(layeredPane, BorderLayout.CENTER);
 
         setVisible(true);
@@ -135,7 +129,7 @@ class pag_astronauta extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 String mensaje = mensajeField.getText();
                 String mensajeEncriptado = encriptarMensaje(mensaje);
-                JOptionPane.showMessageDialog(mensajesFrame, "Mensaje encriptado: " + mensajeEncriptado);
+                JOptionPane.showMessageDialog(mensajesFrame, "Mensaje encriptado y enviado: " + mensajeEncriptado);
             }
         });
         mainPanel.add(encriptarButton, gbc);
@@ -146,7 +140,6 @@ class pag_astronauta extends JFrame {
 
 
     private String encriptarMensaje(String mensaje) {
-        // Eliminar vocales y devolver consonantes
         StringBuilder mensajeEncriptado = new StringBuilder();
         for (char c : mensaje.toCharArray()) {
             if (esConsonante(Character.toLowerCase(c))) {
@@ -256,7 +249,7 @@ class pag_astronauta extends JFrame {
             gbc.insets = new Insets(10, 10, 10, 10);
 
             try {
-                if (rs.next()) {  // Mover al primer resultado en el ResultSet
+                if (rs.next()) {
                     String nombre = rs.getString("nom");
                     int edadPrimerVuelo = rs.getInt("edat_primer_vol");
                     int edad = rs.getInt("edat");
@@ -362,10 +355,10 @@ class pag_astronauta extends JFrame {
             }
         });
 
-        gbc.gridy++;  // Incrementar gridy para colocar el botón debajo del texto
-        gbc.gridx = 0;  // Establecer gridx a 0 para que el botón esté en la primera columna
-        gbc.anchor = GridBagConstraints.CENTER;  // Ajustar la posición al centro
-        gbc.insets = new Insets(-420, 0, 0, 10);  // Cambio en las inserciones para posicionar el botón
+        gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(-420, 0, 0, 10);
         centerPanel.add(mostrarDireccionButton, gbc);
 
         try {
