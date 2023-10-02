@@ -25,7 +25,13 @@ public class pag_espia extends JFrame {
         this.nombreUsuario = nombreUsuario; // Guardar el nombre de usuario con sesión iniciada
         setTitle("Página del espía");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000, 600);
+
+        // Establecer la ventana en pantalla completa
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Hacer que la ventana comience maximizada
+        setResizable(false); // Si deseas que la ventana no sea redimensionable
+
         setLocationRelativeTo(null);
 
         // Crear un panel de pestañas para alternar entre la página principal y la de mensaje
@@ -193,6 +199,26 @@ public class pag_espia extends JFrame {
                 cargarDatosDesdeBaseDeDatos();
             }
         });
+
+        JButton salirButton = new JButton("Salir");
+        salirButton.setFont(new Font("Arial", Font.BOLD, 18));
+        salirButton.setBackground(new Color(255, 0, 0)); // Color de fondo rojo
+        salirButton.setForeground(Color.WHITE); // Color de texto blanco
+        salirButton.setBorder(BorderFactory.createLineBorder(Color.RED, 2)); // Borde rojo
+
+        salirButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Cierra la página actual (this)
+                dispose();
+
+                // Crea una instancia de inicio_session
+                SwingUtilities.invokeLater(() -> new inicio_session());
+            }
+        });
+
+        // Agregar el botón "Salir" al panel de botones
+        buttonPanel.add(salirButton);
 
         // Agregar el panel de mostrar datos y el botón al panel de Datos
         datosPanel.add(datosMostrarPanel, BorderLayout.CENTER);
