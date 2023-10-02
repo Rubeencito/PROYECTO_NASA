@@ -255,7 +255,7 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new pag_mecanico("Nombre de Usuario"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new pag_mecanico("Nombre de Usuario"));
+//    }
 }
