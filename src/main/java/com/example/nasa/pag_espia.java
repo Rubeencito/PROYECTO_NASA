@@ -264,13 +264,13 @@ public class pag_espia extends JFrame {
                 letra == 'á' || letra == 'é' || letra == 'í' || letra == 'ó' || letra == 'ú';
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new pag_espia("Nombre de Usuario"); // Debes proporcionar el nombre de usuario aquí
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                new pag_espia("Nombre de Usuario"); // Debes proporcionar el nombre de usuario aquí
+//            }
+//        });
+//    }
 }
 
 

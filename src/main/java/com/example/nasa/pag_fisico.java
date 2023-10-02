@@ -31,12 +31,12 @@ public class pag_fisico extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                new pag_fisico("Nombre de Usuario");
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                new pag_fisico("Nombre de Usuario");
+//            }
+//        });
+//    }
 }
 

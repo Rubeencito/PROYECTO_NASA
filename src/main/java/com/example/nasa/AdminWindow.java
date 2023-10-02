@@ -215,7 +215,7 @@ public class AdminWindow extends JFrame {
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new AdminWindow("Nombre de Usuario"));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new AdminWindow("Nombre de Usuario"));
+//    }
 }

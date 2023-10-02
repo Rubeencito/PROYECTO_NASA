@@ -162,18 +162,6 @@ public class pag_mecanico extends JFrame {
             }
         });
 
-
-
-
-
-
-
-
-
-
-
-
-
         // ------------- Hace visible la ventana -----------------
         setVisible(true);
 
