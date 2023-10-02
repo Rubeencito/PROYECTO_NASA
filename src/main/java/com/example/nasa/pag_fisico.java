@@ -1,6 +1,5 @@
 package com.example.nasa;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -145,22 +144,22 @@ public class pag_fisico extends JFrame {
         calculadoraDistanciaTitulo.setBounds(10, 10, 280, 20);
         calculadoraDistanciaPanel.add(calculadoraDistanciaTitulo);
 
-        String[] planetas = {"Mercuri", "Venus", "Terra", "Marte", "Júpiter", "Saturn", "Urà", "Neptú"};
+        String[] planetas = {"Mercuri", "Venus", "Sol", "Marte", "Júpiter", "Saturn", "Urà", "Neptú"};
         planetasComboBox = new JComboBox<>(planetas);
         planetasComboBox.setBounds(10, 40, 280, 30);
         calculadoraDistanciaPanel.add(planetasComboBox);
 
-        JButton calcularButton = new JButton("Calcular");
-        calcularButton.setBounds(10, 80, 280, 30);
-        calcularButton.addActionListener(new ActionListener() {
+        JButton calcularDistanciaButton = new JButton("Calcular");
+        calcularDistanciaButton.setBounds(10, 80, 280, 30);
+        calcularDistanciaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 calcularDistancia();
             }
         });
-        calculadoraDistanciaPanel.add(calcularButton);
+        calculadoraDistanciaPanel.add(calcularDistanciaButton);
 
-        resultadoLabel = new JLabel("");
+        resultadoLabel = new JLabel();
         resultadoLabel.setFont(new Font("Arial", Font.PLAIN, 11));
         resultadoLabel.setBounds(10, 120, 280, 20);
         calculadoraDistanciaPanel.add(resultadoLabel);
@@ -218,16 +217,13 @@ public class pag_fisico extends JFrame {
     private void calcularDistancia() {
         String planetaSeleccionado = (String) planetasComboBox.getSelectedItem();
         double distancia = obtenerDistancia(planetaSeleccionado);
-
-        double tiempoViaje = distancia / obtenerDistancia("Terra_al_Sol"); // Distancia de la Tierra al Sol
+        double tiempoViaje = (distancia / obtenerDistancia("Terra")) * 2; // Corrección aquí
 
         DecimalFormat df = new DecimalFormat("#.##");
-        resultadoLabel.setText("La Terra està a " + df.format(distancia) + " km de " + planetaSeleccionado + ". " +
-                "" +
-                "Duració del viatge: " + df.format(tiempoViaje) + " anys.");
+        resultadoLabel.setText("<html>La Terra està a " + df.format(distancia) + " km de " + planetaSeleccionado + ".<br>Duració del viatge: " + df.format(tiempoViaje) + " anys.</html>");
     }
 
-    double obtenerDistancia(String planeta) {
+    private double obtenerDistancia(String planeta) {
         double distancia = 0.0;
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
             String query = "SELECT distancia_terra FROM planetas WHERE nom = ?";
@@ -248,4 +244,3 @@ public class pag_fisico extends JFrame {
         SwingUtilities.invokeLater(() -> new pag_fisico("Nombre de Usuario"));
     }
 }
-
