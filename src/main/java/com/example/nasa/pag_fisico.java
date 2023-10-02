@@ -1,4 +1,6 @@
 package com.example.nasa;
+
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,20 +23,21 @@ public class pag_fisico extends JFrame {
     private JButton ficharButton;
     private JButton calcularDistanciaButton;
     private JButton calcularSuperficieButton;
-    private JComboBox<String> planetasComboBox;
-    private JPanel planetasPanel;
-    private JLabel resultadoLabel;
-
     private boolean entradaRegistrada = false;
 
-    public pag_fisico(String nombreUsuario) {
+    // Componentes de la calculadora de distancia
+    private JPanel calculadoraDistanciaPanel;
+    private JComboBox<String> planetasComboBox;
+    private JLabel resultadoLabel;
 
+    public pag_fisico(String nombreUsuario) {
         setTitle("Pàgina del Físic");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
 
+        // Cargar la imagen de fondo
         try {
-            fondo = ImageIO.read(new File("C:\\Users\\ddiaz\\OneDrive\\Escritorio\\die.jpg"));
+            fondo = ImageIO.read(new File("C:\\Users\\ddiaz\\OneDrive\\Escritorio\\die.jpg")); // Reemplaza con la ruta de tu imagen
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -79,8 +83,8 @@ public class pag_fisico extends JFrame {
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Sexe:", resultSet.getString("sexe"));
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Salari:", resultSet.getBigDecimal("salari").toString());
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Experiencia:", Integer.toString(resultSet.getInt("edat")));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Titulació acadèmica:", Integer.toString(resultSet.getInt("anys_experiencia")));
-                agregarCampoFichaTecnica(fichaTecnicaPanel, "Adreça:", resultSet.getString("adreça"));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Titulació académica:", Integer.toString(resultSet.getInt("anys_experiencia")));
+                agregarCampoFichaTecnica(fichaTecnicaPanel, "Dirección:", resultSet.getString("adreça"));
                 agregarCampoFichaTecnica(fichaTecnicaPanel, "Ciutat:", resultSet.getString("ciutat"));
             }
         } catch (SQLException e) {
@@ -88,34 +92,34 @@ public class pag_fisico extends JFrame {
         }
 
         calcularDistanciaButton = new JButton("Calcular Distància");
-        calcularDistanciaButton.setBounds(50, 450, 150, 30);
+        calcularDistanciaButton.setBounds(100, 450, 150, 30);
         calcularDistanciaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                mostrarRecuadroDatos();
+                mostrarCalculadoraDistancia();
             }
         });
         layeredPane.add(calcularDistanciaButton, Integer.valueOf(3));
 
         calcularSuperficieButton = new JButton("Calcular Superfície");
-        calcularSuperficieButton.setBounds(210, 450, 150, 30);
+        calcularSuperficieButton.setBounds(300, 450, 150, 30);
         calcularSuperficieButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Implementa la lógica para calcular superfície aquí
+                // Implementa la lógica del botón "Calcular Superfície" aquí.
             }
         });
-        layeredPane.add(calcularSuperficieButton, Integer.valueOf(6));
+        layeredPane.add(calcularSuperficieButton, Integer.valueOf(4));
 
         ficharButton = new JButton("Fichar Entrada");
-        ficharButton.setBounds(470, 450, 150, 30);
+        ficharButton.setBounds(500, 450, 150, 30);
         ficharButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (!entradaRegistrada) {
                     ficharEntrada();
                     entradaRegistrada = true;
-                    ficharButton.setText("Fichar Sortida");
+                    ficharButton.setText("Fichar Salida");
                 } else {
                     ficharSalida();
                     entradaRegistrada = false;
@@ -123,47 +127,43 @@ public class pag_fisico extends JFrame {
                 }
             }
         });
-        layeredPane.add(ficharButton, Integer.valueOf(9));
+        layeredPane.add(ficharButton, Integer.valueOf(5));
 
-        // Creación del panel para calcular distancia
-        planetasPanel = new JPanel();
-        planetasPanel.setBounds(600, 100, 400, 300);
-        planetasPanel.setBackground(Color.WHITE);
-        planetasPanel.setBorder(BorderFactory.createCompoundBorder(
+        // Configuración del panel de la calculadora de distancia
+        calculadoraDistanciaPanel = new JPanel();
+        calculadoraDistanciaPanel.setBackground(Color.WHITE);
+        calculadoraDistanciaPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createLineBorder(Color.BLACK)
         ));
-        planetasPanel.setVisible(false);
-        planetasPanel.setLayout(new BorderLayout());
+        calculadoraDistanciaPanel.setBounds(1100, 100, 300, 400);
+        calculadoraDistanciaPanel.setVisible(false);
+        layeredPane.add(calculadoraDistanciaPanel, Integer.valueOf(6));
 
-        JLabel tituloCalculoLabel = new JLabel("Calcule la distància de la Terra a un planeta");
-        tituloCalculoLabel.setFont(new Font("Arial", Font.BOLD, 14));
-        tituloCalculoLabel.setHorizontalAlignment(JLabel.CENTER);
-        planetasPanel.add(tituloCalculoLabel, BorderLayout.NORTH);
+        JLabel calculadoraDistanciaTitulo = new JLabel("Calcule la distància de la Terra a un planeta:");
+        calculadoraDistanciaTitulo.setFont(new Font("Arial", Font.PLAIN, 11));
+        calculadoraDistanciaTitulo.setBounds(10, 10, 280, 20);
+        calculadoraDistanciaPanel.add(calculadoraDistanciaTitulo);
 
-        JPanel calculoPanel = new JPanel();
-        calculoPanel.setLayout(new FlowLayout());
-        planetasPanel.add(calculoPanel, BorderLayout.CENTER);
-
-        String[] nombresPlanetas = {"Mercuri", "Venus", "Sol", "Marte", "Júpiter", "Saturn", "Urà", "Neptú"};
-        planetasComboBox = new JComboBox<>(nombresPlanetas);
-        calculoPanel.add(planetasComboBox);
+        String[] planetas = {"Mercuri", "Venus", "Terra", "Marte", "Júpiter", "Saturn", "Urà", "Neptú"};
+        planetasComboBox = new JComboBox<>(planetas);
+        planetasComboBox.setBounds(10, 40, 280, 30);
+        calculadoraDistanciaPanel.add(planetasComboBox);
 
         JButton calcularButton = new JButton("Calcular");
+        calcularButton.setBounds(10, 80, 280, 30);
         calcularButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 calcularDistancia();
             }
         });
-        calculoPanel.add(calcularButton);
+        calculadoraDistanciaPanel.add(calcularButton);
 
         resultadoLabel = new JLabel("");
-        resultadoLabel.setFont(new Font("Arial", Font.PLAIN, 12));
-        resultadoLabel.setHorizontalAlignment(JLabel.CENTER);
-        planetasPanel.add(resultadoLabel, BorderLayout.SOUTH);
-
-        layeredPane.add(planetasPanel, Integer.valueOf(8));
+        resultadoLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+        resultadoLabel.setBounds(10, 120, 280, 20);
+        calculadoraDistanciaPanel.add(resultadoLabel);
 
         // Agrega el JLayeredPane al JFrame
         add(layeredPane);
@@ -211,32 +211,41 @@ public class pag_fisico extends JFrame {
         }
     }
 
-    private void mostrarRecuadroDatos() {
-        planetasPanel.setVisible(true);
+    private void mostrarCalculadoraDistancia() {
+        calculadoraDistanciaPanel.setVisible(true);
     }
 
     private void calcularDistancia() {
         String planetaSeleccionado = (String) planetasComboBox.getSelectedItem();
-        String distancia = obtenerDistanciaTierra(planetaSeleccionado);
-        resultadoLabel.setText("La Terra està a " + distancia + " km de " + planetaSeleccionado);
+        double distancia = obtenerDistancia(planetaSeleccionado);
+
+        double tiempoViaje = distancia / obtenerDistancia("Terra_al_Sol"); // Distancia de la Tierra al Sol
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        resultadoLabel.setText("La Terra està a " + df.format(distancia) + " km de " + planetaSeleccionado + ". " +
+                "" +
+                "Duració del viatge: " + df.format(tiempoViaje) + " anys.");
     }
 
-    private String obtenerDistanciaTierra(String planeta) {
+    double obtenerDistancia(String planeta) {
+        double distancia = 0.0;
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
             String query = "SELECT distancia_terra FROM planetas WHERE nom = ?";
             PreparedStatement preparedStatement = conn.prepareStatement(query);
             preparedStatement.setString(1, planeta);
             ResultSet resultSet = preparedStatement.executeQuery();
+
             if (resultSet.next()) {
-                return resultSet.getString("distancia_terra");
+                distancia = resultSet.getDouble("distancia_terra");
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return "Desconeguda";
+        return distancia;
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new pag_fisico("Nom d'Usuari"));
+        SwingUtilities.invokeLater(() -> new pag_fisico("Nombre de Usuario"));
     }
 }
+
