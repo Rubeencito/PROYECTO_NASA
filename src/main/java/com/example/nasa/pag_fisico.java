@@ -210,7 +210,8 @@ public class pag_fisico extends JFrame {
         ));
         calculadoraDistanciaPanel.setBounds(1100, 100, 300, 400);
         calculadoraDistanciaPanel.setVisible(false);
-        layeredPane.add(calculadoraDistanciaPanel, Integer.valueOf(6));
+        layeredPane.add(calculadoraDistanciaPanel, Integer.valueOf
+                 (6));
 
         JLabel calculadoraDistanciaTitulo = new JLabel("Calcule la distància de la Terra a un planeta:");
         calculadoraDistanciaTitulo.setFont(new Font("Arial", Font.PLAIN, 11));
@@ -290,11 +291,13 @@ public class pag_fisico extends JFrame {
     private void calcularDistancia() {
         String planetaSeleccionado = (String) planetasComboBox.getSelectedItem();
         double distancia = obtenerDistancia(planetaSeleccionado);
-        double tiempoViaje = (distancia / obtenerDistancia("Terra")) * 2; // Corrección aquí
+        double tiempoViaje = (distancia / obtenerDistancia("Sol")) * 2; // Utiliza el valor de 2 años como referencia
 
         DecimalFormat df = new DecimalFormat("#.##");
         resultadoLabel.setText("<html>La Terra està a " + df.format(distancia) + " km de " + planetaSeleccionado + ".<br>Duració del viatge: " + df.format(tiempoViaje) + " anys.</html>");
     }
+
+
 
     private double obtenerDistancia(String planeta) {
         double distancia = 0.0;
@@ -312,6 +315,9 @@ public class pag_fisico extends JFrame {
         }
         return distancia;
     }
+
+
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new pag_fisico("Nombre de Usuario"));
