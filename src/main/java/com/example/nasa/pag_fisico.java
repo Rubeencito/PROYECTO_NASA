@@ -145,12 +145,18 @@ public class pag_fisico extends JFrame {
 
                             if (resultSet.next()) {
                                 double superficiePlaneta = resultSet.getDouble("superficie");
+                                double precioCombustiblePorKm2 = 200.0; // Precio por km² de combustible
+                                double precioViaje = superficiePlaneta * precioCombustiblePorKm2;
 
-                                // Formatea la superficie para mostrarla con ceros a la izquierda
-                                String superficieFormateada = String.format("%.0f", superficiePlaneta);
+                                // Formatea la superficie para mostrar todos los ceros
+                                String superficieFormateada = String.format("%.2f", superficiePlaneta);
+
+                                // Formatea el precio para mostrarlo en formato de moneda
+                                String precioFormateado = String.format("$%,.2f", precioViaje);
 
                                 // Muestra el resultado en un JOptionPane
-                                JOptionPane.showMessageDialog(null, "La superficie de " + planetaSeleccionado + " es " + superficieFormateada + " km².", "Resultado Superficie", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Superficie de " + planetaSeleccionado + ": " + superficieFormateada + " km²\n"
+                                        + "Precio de viajar por toda la superficie: " + precioFormateado, "Precio del Viaje", JOptionPane.INFORMATION_MESSAGE);
                             } else {
                                 JOptionPane.showMessageDialog(null, "No se encontró información para " + planetaSeleccionado, "Error", JOptionPane.ERROR_MESSAGE);
                             }
