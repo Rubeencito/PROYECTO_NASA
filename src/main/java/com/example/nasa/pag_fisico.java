@@ -14,7 +14,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class pag_fisico extends JFrame {
 
@@ -100,6 +103,8 @@ public class pag_fisico extends JFrame {
         });
         layeredPane.add(calcularDistanciaButton, Integer.valueOf(3));
 
+
+
         calcularSuperficieButton = new JButton("Calcular Superfície");
         calcularSuperficieButton.setBounds(300, 450, 150, 30);
         calcularSuperficieButton.addActionListener(new ActionListener() {
@@ -107,16 +112,19 @@ public class pag_fisico extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Crear un JComboBox vacío para los planetas
                 JComboBox<String> planetasComboBox = new JComboBox<>();
+                Map<String, Double> superficies = new HashMap<>(); // Mapa para almacenar las superficies
 
                 try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
-                    String query = "SELECT nom FROM planetas";
+                    String query = "SELECT nom, superficie FROM planetas";
                     PreparedStatement preparedStatement = conn.prepareStatement(query);
                     ResultSet resultSet = preparedStatement.executeQuery();
 
-                    // Llenar el JComboBox con los nombres de los planetas de la base de datos
+                    // Llenar el JComboBox con los nombres de los planetas y almacenar sus superficies en el mapa
                     while (resultSet.next()) {
                         String nombrePlaneta = resultSet.getString("nom");
+                        double superficiePlaneta = resultSet.getDouble("superficie");
                         planetasComboBox.addItem(nombrePlaneta);
+                        superficies.put(nombrePlaneta, superficiePlaneta);
                     }
                 } catch (SQLException ex) {
                     ex.printStackTrace();
@@ -125,7 +133,7 @@ public class pag_fisico extends JFrame {
                 // Crear un JPanel para colocar el JComboBox y el botón "Calcular"
                 JPanel superficiePanel = new JPanel();
                 superficiePanel.setLayout(new FlowLayout());
-                superficiePanel.add(new JLabel("Calcule la superfície de:"));
+                superficiePanel.add(new JLabel("Calculi la superfície de:"));
                 superficiePanel.add(planetasComboBox);
 
                 // Crear un botón "Calcular"
@@ -154,11 +162,23 @@ public class pag_fisico extends JFrame {
                                 // Formatea el precio para mostrarlo en formato de moneda
                                 String precioFormateado = String.format("$%,.2f", precioViaje);
 
+                                // Compara la superficie con el planeta más grande y el más pequeño
+                                String mensaje = "Superficie de " + planetaSeleccionado + ": " + superficieFormateada + " km²\n"
+                                        + "Preu d'exploració total: " + precioFormateado;
+
+                                double superficieMaxima = Collections.max(superficies.values());
+                                double superficieMinima = Collections.min(superficies.values());
+
+                                if (superficiePlaneta == superficieMaxima) {
+                                    mensaje += "\nEs el planeta més car d'explorar actualment";
+                                } else if (superficiePlaneta == superficieMinima) {
+                                    mensaje += "\nEs el planeta més economic per explorar";
+                                }
+
                                 // Muestra el resultado en un JOptionPane
-                                JOptionPane.showMessageDialog(null, "Superficie de " + planetaSeleccionado + ": " + superficieFormateada + " km²\n"
-                                        + "Precio de viajar por toda la superficie: " + precioFormateado, "Precio del Viaje", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, mensaje, "Preu del Viaje", JOptionPane.INFORMATION_MESSAGE);
                             } else {
-                                JOptionPane.showMessageDialog(null, "No se encontró información para " + planetaSeleccionado, "Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "No hi ha informació suficient " + planetaSeleccionado, "Error", JOptionPane.ERROR_MESSAGE);
                             }
                         } catch (SQLException ex) {
                             ex.printStackTrace();
@@ -181,9 +201,12 @@ public class pag_fisico extends JFrame {
             }
         });
 
+
         layeredPane.add(calcularSuperficieButton, Integer.valueOf(4));
 
-        ficharButton = new JButton("Fichar Entrada");
+
+
+        ficharButton = new JButton("Fitxar Entrada");
         ficharButton.setBounds(500, 450, 150, 30);
         ficharButton.addActionListener(new ActionListener() {
             @Override
@@ -191,11 +214,11 @@ public class pag_fisico extends JFrame {
                 if (!entradaRegistrada) {
                     ficharEntrada();
                     entradaRegistrada = true;
-                    ficharButton.setText("Fichar Salida");
+                    ficharButton.setText("Fitxar Sortida");
                 } else {
                     ficharSalida();
                     entradaRegistrada = false;
-                    ficharButton.setText("Fichar Entrada");
+                    ficharButton.setText("Fitxar Entrada");
                 }
             }
         });
@@ -213,7 +236,7 @@ public class pag_fisico extends JFrame {
         layeredPane.add(calculadoraDistanciaPanel, Integer.valueOf
                  (6));
 
-        JLabel calculadoraDistanciaTitulo = new JLabel("Calcule la distància de la Terra a un planeta:");
+        JLabel calculadoraDistanciaTitulo = new JLabel("Calculi la distància de la Terra a un planeta:");
         calculadoraDistanciaTitulo.setFont(new Font("Arial", Font.PLAIN, 11));
         calculadoraDistanciaTitulo.setBounds(10, 10, 280, 20);
         calculadoraDistanciaPanel.add(calculadoraDistanciaTitulo);
@@ -261,7 +284,7 @@ public class pag_fisico extends JFrame {
             preparedStatement.setString(1, dateFormat.format(fechaActual));
             preparedStatement.setString(2, timeFormat.format(fechaActual));
             preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Fichaje de Entrada registrado.", "Fichaje Registrado", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Fitxatge d'Entrada registrat.", "Fitxatge registrat", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -278,7 +301,7 @@ public class pag_fisico extends JFrame {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             preparedStatement.setString(2, dateFormat.format(fechaActual));
             preparedStatement.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Fichaje de Salida registrado.", "Fichaje Registrado", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Fitxatge de Sortida registrat.", "Fitxatge registrat", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException e) {
             e.printStackTrace();
         }
