@@ -105,9 +105,76 @@ public class pag_fisico extends JFrame {
         calcularSuperficieButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Implementa la lógica del botón "Calcular Superfície" aquí.
+                // Crear un JComboBox vacío para los planetas
+                JComboBox<String> planetasComboBox = new JComboBox<>();
+
+                try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
+                    String query = "SELECT nom FROM planetas";
+                    PreparedStatement preparedStatement = conn.prepareStatement(query);
+                    ResultSet resultSet = preparedStatement.executeQuery();
+
+                    // Llenar el JComboBox con los nombres de los planetas de la base de datos
+                    while (resultSet.next()) {
+                        String nombrePlaneta = resultSet.getString("nom");
+                        planetasComboBox.addItem(nombrePlaneta);
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+
+                // Crear un JPanel para colocar el JComboBox y el botón "Calcular"
+                JPanel superficiePanel = new JPanel();
+                superficiePanel.setLayout(new FlowLayout());
+                superficiePanel.add(new JLabel("Calcule la superfície de:"));
+                superficiePanel.add(planetasComboBox);
+
+                // Crear un botón "Calcular"
+                JButton calcularSuperficie = new JButton("Calcular");
+
+                // ActionListener para el botón "Calcular"
+                calcularSuperficie.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        String planetaSeleccionado = (String) planetasComboBox.getSelectedItem();
+
+                        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123")) {
+                            String query = "SELECT superficie FROM planetas WHERE nom = ?";
+                            PreparedStatement preparedStatement = conn.prepareStatement(query);
+                            preparedStatement.setString(1, planetaSeleccionado);
+                            ResultSet resultSet = preparedStatement.executeQuery();
+
+                            if (resultSet.next()) {
+                                double superficiePlaneta = resultSet.getDouble("superficie");
+
+                                // Formatea la superficie para mostrarla con ceros a la izquierda
+                                String superficieFormateada = String.format("%.0f", superficiePlaneta);
+
+                                // Muestra el resultado en un JOptionPane
+                                JOptionPane.showMessageDialog(null, "La superficie de " + planetaSeleccionado + " es " + superficieFormateada + " km².", "Resultado Superficie", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "No se encontró información para " + planetaSeleccionado, "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } catch (SQLException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+
+                // Agregar el botón "Calcular" al JPanel
+                superficiePanel.add(calcularSuperficie);
+
+                // Crear un JFrame para mostrar el JPanel
+                JFrame superficieFrame = new JFrame("Calcular Superficie");
+                superficieFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+                superficieFrame.setSize(400, 100);
+                superficieFrame.setLocationRelativeTo(null);
+                superficieFrame.add(superficiePanel);
+
+                // Hacer visible el JFrame
+                superficieFrame.setVisible(true);
             }
         });
+
         layeredPane.add(calcularSuperficieButton, Integer.valueOf(4));
 
         ficharButton = new JButton("Fichar Entrada");
