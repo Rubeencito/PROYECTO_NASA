@@ -118,7 +118,7 @@ public class pag_mecanico extends JFrame {
         adminButton = new JButton("Administrar Datos");
         adminButton.setBounds(700, 270, 200, 30); // coordenadas y dimensiones
 
-// Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" -------------------------------------------------------------------
+        // Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" ------------------------------------------------------
         if (nombreUsuario.equals("admin")) {
             adminButton.setVisible(true);
         } else {
@@ -136,6 +136,28 @@ public class pag_mecanico extends JFrame {
         });
         backgroundLabel.add(adminButton, Integer.valueOf(5)); // Botón de administración
 
+        //Boton CRUD INICIO DE SESION --------------------------------------------
+
+        adminButton = new JButton("Nuevo Usuario");
+        adminButton.setBounds(700, 320, 200, 30); // coordenadas y dimensiones
+
+        // Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" ------------------------------------------------------
+        if (nombreUsuario.equals("admin")) {
+            adminButton.setVisible(true);
+        } else {
+            adminButton.setVisible(false);
+        }
+        adminButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (nombreUsuario.equals("admin")) {
+                    // Abre la ventana de administración
+                    SwingUtilities.invokeLater(() -> new Registro(nombreUsuario));
+                }
+            }
+        });
+        backgroundLabel.add(adminButton, Integer.valueOf(5)); // Botón de administración
+        //------------------------------------------------------------------------
 
 
         // Agrega un botón "Salir" en el constructor de la clase pag_mecanico
