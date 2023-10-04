@@ -157,7 +157,7 @@ public class pag_mecanico extends JFrame {
                     dispose();
 
                     // Crea una instancia de inicio_session
-                    SwingUtilities.invokeLater(() -> new inicio_session());
+                   // SwingUtilities.invokeLater(() -> new inicio_session());
                 }
             }
         });
