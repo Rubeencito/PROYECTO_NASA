@@ -100,7 +100,7 @@ class pag_astronauta extends JFrame {
         imageConstraints.insets = new Insets(10, 0, 0, 0);
 
         try {
-            ImageIcon astronautIcon = new ImageIcon("C:\\Users\\rhuer\\IdeaProjects\\NASA\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
+            ImageIcon astronautIcon = new ImageIcon("src/main/java/com/example/nasa/astronauta.png");
             int imageWidth = astronautIcon.getIconWidth() / 2;
             int imageHeight = astronautIcon.getIconHeight() / 2;
             astronautIcon.setImage(astronautIcon.getImage().getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT));
@@ -380,7 +380,7 @@ class pag_astronauta extends JFrame {
         centerPanel.add(mostrarDireccionButton, gbc);
 
         try {
-            ImageIcon astronautIconRight = new ImageIcon("C:\\Users\\rhuer\\IdeaProjects\\NASA\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
+            ImageIcon astronautIconRight = new ImageIcon("src/main/java/com/example/nasa/astronauta.png");
             int imageWidthRight = astronautIconRight.getIconWidth() / 2;
             int imageHeightRight = astronautIconRight.getIconHeight() / 2;
             astronautIconRight.setImage(astronautIconRight.getImage().getScaledInstance(imageWidthRight, imageHeightRight, Image.SCALE_DEFAULT));
@@ -392,7 +392,7 @@ class pag_astronauta extends JFrame {
         }
 
         try {
-            ImageIcon astronautIconLeft = new ImageIcon("C:\\Users\\rhuer\\IdeaProjects\\NASA\\src\\main\\java\\com\\example\\nasa\\astronauta.png");
+            ImageIcon astronautIconLeft = new ImageIcon("src/main/java/com/example/nasa/astronauta.png");
             int imageWidthLeft = astronautIconLeft.getIconWidth() / 2;
             int imageHeightLeft = astronautIconLeft.getIconHeight() / 2;
             astronautIconLeft.setImage(astronautIconLeft.getImage().getScaledInstance(imageWidthLeft, imageHeightLeft, Image.SCALE_DEFAULT));
@@ -419,9 +419,9 @@ class pag_astronauta extends JFrame {
         coordenadasFrame.setVisible(true);
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new pag_astronauta("Nombre de Usuario");
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            new pag_astronauta("Nombre de Usuario");
+//        });
+//    }
 }
