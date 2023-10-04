@@ -49,11 +49,16 @@ public class pag_fisico extends JFrame {
         JLayeredPane layeredPane = new JLayeredPane();
         layeredPane.setPreferredSize(new Dimension(getWidth(), getHeight()));
 
+        // --------- mensaje entrada -----------------
+
         JLabel saludoLabel = new JLabel("Hola Doctor " + nombreUsuario);
-        saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        //saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        saludoLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
         saludoLabel.setVerticalAlignment(JLabel.TOP);
-        saludoLabel.setBounds(50, 50, 300, 30);
+        saludoLabel.setBounds(300, 50, 450, 50);
         layeredPane.add(saludoLabel, Integer.valueOf(1));
+
+        // ------------ FIXA TECNICA --------------------
 
         JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2));
         fichaTecnicaPanel.setBackground(Color.WHITE);
@@ -61,7 +66,7 @@ public class pag_fisico extends JFrame {
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createLineBorder(Color.BLACK)
         ));
-        fichaTecnicaPanel.setBounds(50, 100, 300, 300);
+        fichaTecnicaPanel.setBounds(250, 150, 400, 400);
         layeredPane.add(fichaTecnicaPanel, Integer.valueOf(2));
 
         JPanel fondoPanel = new JPanel() {
@@ -95,8 +100,10 @@ public class pag_fisico extends JFrame {
             e.printStackTrace();
         }
 
+        // ------------ Calcular Distancia ----------------------
+
         calcularDistanciaButton = new JButton("Calcular Distància");
-        calcularDistanciaButton.setBounds(100, 450, 150, 30);
+        calcularDistanciaButton.setBounds(70, 150, 150, 30);
         calcularDistanciaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -107,9 +114,11 @@ public class pag_fisico extends JFrame {
 
         // Botón "Salir"
         salirButton = new JButton("Salir");
-        salirButton.setBounds(700, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        salirButton.setBounds(70, 520, 150, 30); // Ajusta las coordenadas y dimensiones según tu diseño
         salirButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         layeredPane.add(salirButton, Integer.valueOf(4));
+
+
 // Agrega un ActionListener para el botón "Salir"
         salirButton.addActionListener(new ActionListener() {
             @Override
@@ -127,7 +136,7 @@ public class pag_fisico extends JFrame {
 
 
         calcularSuperficieButton = new JButton("Calcular Superfície");
-        calcularSuperficieButton.setBounds(300, 450, 150, 30);
+        calcularSuperficieButton.setBounds(70, 220, 150, 30);
         calcularSuperficieButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -150,8 +159,6 @@ public class pag_fisico extends JFrame {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
-
-
 
 
 
@@ -232,7 +239,7 @@ public class pag_fisico extends JFrame {
 
 
         ficharButton = new JButton("Fitxar Entrada");
-        ficharButton.setBounds(500, 450, 150, 30);
+        ficharButton.setBounds(70, 270, 150, 30);
         ficharButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -249,14 +256,14 @@ public class pag_fisico extends JFrame {
         });
         layeredPane.add(ficharButton, Integer.valueOf(5));
 
-        // Configuración del panel de la calculadora de distancia
+        // --------------------- Configuración del panel de la calculadora de distancia -------------------------------
         calculadoraDistanciaPanel = new JPanel();
         calculadoraDistanciaPanel.setBackground(Color.WHITE);
         calculadoraDistanciaPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createEmptyBorder(10, 10, 10, 10),
                 BorderFactory.createLineBorder(Color.BLACK)
         ));
-        calculadoraDistanciaPanel.setBounds(1100, 100, 300, 400);
+        calculadoraDistanciaPanel.setBounds(700, 150, 300, 400);
         calculadoraDistanciaPanel.setVisible(false);
         layeredPane.add(calculadoraDistanciaPanel, Integer.valueOf
                  (6));
