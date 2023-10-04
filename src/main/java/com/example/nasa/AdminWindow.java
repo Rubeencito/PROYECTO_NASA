@@ -26,7 +26,7 @@ public class AdminWindow extends JFrame {
     private JButton eliminarButton;
 
     public AdminWindow(String nombreUsuario) {
-        // Configura la ventana de administración
+        //  Ventana de administración
         setTitle("Ventana de Administración");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(400, 400);

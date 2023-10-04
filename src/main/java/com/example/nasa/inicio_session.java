@@ -133,6 +133,9 @@ public class inicio_session {
                 if (verificarCredenciales(usuario, contrasena, rolSeleccionado)) {
                     // Credenciales válidas, redirigir al usuario a la página correspondiente
                     redirigirSegunRol(rolSeleccionado, usuario);
+                    // Restablecer los campos de usuario y contraseña
+                    usuarioField.setText("");
+                    contrasenaField.setText("");
                 } else {
                     // Credenciales inválidas, mostrar un mensaje de error
                     JOptionPane.showMessageDialog(frame, "Credenciales inválidas. Inténtalo de nuevo.");
