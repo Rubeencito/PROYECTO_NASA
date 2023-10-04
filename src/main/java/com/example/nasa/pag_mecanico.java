@@ -16,17 +16,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class pag_mecanico extends JFrame {
-    private JButton ficharButton; // Declarar como variable de instancia
-    private boolean entradaRegistrada = false; // Agregar una variable para el estado de fichaje
+    private JButton ficharButton;
+    private boolean entradaRegistrada = false; // variable para el estado de fichar
 
-    private JButton adminButton; // Declarar como variable de instancia
+    private JButton adminButton;
     public pag_mecanico(String nombreUsuario) {
-        // Configura la ventana
+        // Configuracion de la ventana mecanico
         setTitle("Página del Mecánico");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH); // Maximiza la ventana a pantalla completa
 
-        // Obtiene las dimensiones de la pantalla
+        // Dimensiones de la pantalla
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
         // Carga la imagen de fondo desde un archivo
@@ -36,12 +36,12 @@ public class pag_mecanico extends JFrame {
         img = img.getScaledInstance(screenSize.width, screenSize.height, Image.SCALE_SMOOTH);
         backgroundImage = new ImageIcon(img);
 
-        // Crea un JLabel con la imagen de fondo
+        // JLabel con la imagen de fondo
         JLabel backgroundLabel = new JLabel(backgroundImage);
         backgroundLabel.setBounds(0, 0, screenSize.width, screenSize.height);
         add(backgroundLabel);
 
-        // Crea una etiqueta con el saludo personalizado
+        // titulo de entrada a mecanico
         JLabel saludoLabel = new JLabel("Hola Mecánico " + nombreUsuario);
         //saludoLabel.setFont(new Font("Arial", Font.BOLD, 16));
         saludoLabel.setFont(new Font("Times New Roman", Font.BOLD, 36));
@@ -49,10 +49,10 @@ public class pag_mecanico extends JFrame {
         saludoLabel.setBounds(450, 50, 400, 70); // Ajusta las coordenadas y dimensiones según tu diseño
         backgroundLabel.add(saludoLabel); // Agregamos la etiqueta al JLabel del fondo
 
-        // -------------------------------- FICHA TECNICA -------------------------
+        // -------------------------------- FICHA TECNICA ------------------------------
 
 
-        // Crea un panel para mostrar la ficha técnica del usuario ----------------------------------------------------------------
+        // Panel para mostrar la ficha técnica del usuario ----------------------------------------------------------------
         JPanel fichaTecnicaPanel = new JPanel(new GridLayout(0, 2)); // Usamos un diseño de cuadrícula para mostrar los datos
         fichaTecnicaPanel.setBackground(Color.WHITE); // Fondo blanco para la ficha técnica
         fichaTecnicaPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -116,7 +116,7 @@ public class pag_mecanico extends JFrame {
 
         // Boton para el CRUD --------------------------------------------------
         adminButton = new JButton("Administrar Datos");
-        adminButton.setBounds(700, 270, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        adminButton.setBounds(700, 270, 200, 30); // coordenadas y dimensiones
 
 // Verifica si el nombre de usuario es "admin" y muestra el botón "Admin" -------------------------------------------------------------------
         if (nombreUsuario.equals("admin")) {
@@ -140,14 +140,14 @@ public class pag_mecanico extends JFrame {
 
         // Agrega un botón "Salir" en el constructor de la clase pag_mecanico
         JButton salirButton = new JButton("Salir");
-        salirButton.setBounds(700, 540, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        salirButton.setBounds(700, 540, 200, 30); // coordenadas y dimensiones
         salirButton.setBorder(BorderFactory.createLineBorder(Color.white, 2));
         salirButton.setBackground(Color.BLUE);
         salirButton.setFont(new Font("Tahoma", Font.BOLD, 14));
         salirButton.setForeground(Color.WHITE);
         backgroundLabel.add(salirButton, Integer.valueOf(6)); // Botón de Salir
 
-        // Agrega un ActionListener para el botón "Salir"
+        //  ActionListener para el botón "Salir"
         salirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -157,7 +157,7 @@ public class pag_mecanico extends JFrame {
                     dispose();
 
                     // Crea una instancia de inicio_session
-                    SwingUtilities.invokeLater(() -> new inicio_session());
+                   // SwingUtilities.invokeLater(() -> new inicio_session());
                 }
             }
         });
@@ -203,13 +203,13 @@ public class pag_mecanico extends JFrame {
             // Cierra el BufferedWriter
             writer.close();
 
-            // Muestra un cuadro de diálogo informando que se ha creado el archivo
+            // POP UP informando que se ha creado el archivo
             JOptionPane.showMessageDialog(this, "Archivo de texto generado: " + rutaArchivo, "Archivo Generado", JOptionPane.INFORMATION_MESSAGE);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
-    // Método para registrar un fichaje de entrada en la base de datos ----------------------------------------------------------------------
+    // Método para fichar entrada en la base de datos ----------------------------------------------------------------------
     private void ficharEntrada() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
@@ -226,7 +226,7 @@ public class pag_mecanico extends JFrame {
             e.printStackTrace();
         }
     }
-    // Método para registrar un fichaje de salida en la base de datos ------------------------------------------------------------------
+    // Método para fichar salida en la base de datos ------------------------------------------------------------------
     private void ficharSalida() {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost/nasa", "root", "Admin123");
