@@ -25,6 +25,8 @@ public class pag_fisico extends JFrame {
     private JButton ficharButton;
     private JButton calcularDistanciaButton;
     private JButton calcularSuperficieButton;
+
+    private JButton salirButton;
     private boolean entradaRegistrada = false;
 
     // Componentes de la calculadora de distancia
@@ -103,6 +105,25 @@ public class pag_fisico extends JFrame {
         });
         layeredPane.add(calcularDistanciaButton, Integer.valueOf(3));
 
+        // Botón "Salir"
+        salirButton = new JButton("Salir");
+        salirButton.setBounds(700, 450, 200, 30); // Ajusta las coordenadas y dimensiones según tu diseño
+        salirButton.setFont(new Font("Tahoma", Font.BOLD, 14));
+        layeredPane.add(salirButton, Integer.valueOf(4));
+// Agrega un ActionListener para el botón "Salir"
+        salirButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirmacion = JOptionPane.showConfirmDialog(null, "¿Estás seguro de que quieres salir?", "Confirmar Salida", JOptionPane.YES_NO_OPTION);
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    // Cierra la página actual (this)
+                    dispose();
+
+                    // Crea una instancia de inicio_session
+                    SwingUtilities.invokeLater(() -> new inicio_session());
+                }
+            }
+        });
 
 
         calcularSuperficieButton = new JButton("Calcular Superfície");
@@ -129,6 +150,10 @@ public class pag_fisico extends JFrame {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+
+
+
+
 
                 // Crear un JPanel para colocar el JComboBox y el botón "Calcular"
                 JPanel superficiePanel = new JPanel();
