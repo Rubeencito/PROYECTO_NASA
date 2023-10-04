@@ -209,11 +209,7 @@ public class pag_espia extends JFrame {
         salirButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // Cierra la página actual (this)
                 dispose();
-
-                // Crea una instancia de inicio_session
-                SwingUtilities.invokeLater(() -> new inicio_session());
             }
         });
 
